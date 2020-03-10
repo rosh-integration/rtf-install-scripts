@@ -59,7 +59,7 @@ variable "vpc_cidr" {
 }
 
 variable "activation_data" {
-  default = "YW55cG9pbnQubXVsZXNvZnQuY29tOjdmZDk0OGE5LWMwNGEtNDJiYi1iMTFhLTAyZTNkOWJmMDc0Mw=="
+  default = "YW55cG9pbnQubXVsZXNvZnQuY29tOmQ4MjJiMDYyLTk0ODAtNDhiMy1iOTY4LWEzMTVjODRjNjQzNQ=="
 }
 
 variable "anypoint_org_id" {
@@ -87,12 +87,12 @@ variable "enable_public_ips" {
 }
 
 variable "existing_vpc_id" {
-  default = "vpc-0044ab40cf21a7a9c"
+  default = ""
 }
 
 variable "existing_subnet_ids" {
   type = list(string)
-  default = ["subnet-03a59993c52a79cec"]
+  default = []
 }
 
 variable "enable_elastic_ips" {
