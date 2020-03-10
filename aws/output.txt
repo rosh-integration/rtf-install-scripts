@@ -1,0 +1,12 @@
+Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+
+Outputs:
+
+controller_elastic_ips =
+controller_private_ips = 192.168.61.116
+controller_public_ips = 52.62.86.50
+inbound_traffic_controller_private_ips =
+inbound_traffic_controller_public_ips =
+loadbalancer_dns_name =
+worker_private_ips = 192.168.92.178 192.168.105.170
+worker_public_ips = 52.62.175.26 54.252.218.91

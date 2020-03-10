@@ -1,0 +1,1232 @@
+{
+  "version": 4,
+  "terraform_version": "0.12.23",
+  "serial": 30,
+  "lineage": "dd8c5dcb-8bcc-1b2b-1374-f9916f8b3dff",
+  "outputs": {
+    "controller_elastic_ips": {
+      "value": "",
+      "type": "string"
+    },
+    "inbound_traffic_controller_private_ips": {
+      "value": "",
+      "type": "string"
+    },
+    "inbound_traffic_controller_public_ips": {
+      "value": "",
+      "type": "string"
+    },
+    "loadbalancer_dns_name": {
+      "value": "",
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "mode": "data",
+      "type": "aws_ami",
+      "name": "nodes",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "architecture": "x86_64",
+            "block_device_mappings": [
+              {
+                "device_name": "/dev/sda1",
+                "ebs": {
+                  "delete_on_termination": "true",
+                  "encrypted": "false",
+                  "iops": "0",
+                  "snapshot_id": "snap-03d6fee56e277f1be",
+                  "volume_size": "10",
+                  "volume_type": "gp2"
+                },
+                "no_device": "",
+                "virtual_name": ""
+              }
+            ],
+            "creation_date": "2019-07-24T08:59:25.000Z",
+            "description": "Provided by Red Hat, Inc.",
+            "executable_users": null,
+            "filter": [
+              {
+                "name": "name",
+                "values": [
+                  "RHEL-7.7_HVM_GA-20190723-x86_64-1-Hourly2-GP2"
+                ]
+              }
+            ],
+            "hypervisor": "xen",
+            "id": "ami-0f1ef883e90ca71c0",
+            "image_id": "ami-0f1ef883e90ca71c0",
+            "image_location": "309956199498/RHEL-7.7_HVM_GA-20190723-x86_64-1-Hourly2-GP2",
+            "image_owner_alias": null,
+            "image_type": "machine",
+            "kernel_id": null,
+            "most_recent": true,
+            "name": "RHEL-7.7_HVM_GA-20190723-x86_64-1-Hourly2-GP2",
+            "name_regex": null,
+            "owner_id": "309956199498",
+            "owners": [
+              "309956199498"
+            ],
+            "platform": null,
+            "product_codes": [],
+            "public": true,
+            "ramdisk_id": null,
+            "root_device_name": "/dev/sda1",
+            "root_device_type": "ebs",
+            "root_snapshot_id": "snap-03d6fee56e277f1be",
+            "sriov_net_support": "simple",
+            "state": "available",
+            "state_reason": {
+              "code": "UNSET",
+              "message": "UNSET"
+            },
+            "tags": {},
+            "virtualization_type": "hvm"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "aws_availability_zones",
+      "name": "available",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "blacklisted_names": null,
+            "blacklisted_zone_ids": null,
+            "id": "2020-03-09 22:23:26.7447051 +0000 UTC",
+            "names": [
+              "ap-southeast-2a",
+              "ap-southeast-2b",
+              "ap-southeast-2c"
+            ],
+            "state": null,
+            "zone_ids": [
+              "apse2-az3",
+              "apse2-az1",
+              "apse2-az2"
+            ]
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "template_cloudinit_config",
+      "name": "controller",
+      "provider": "provider.template",
+      "instances": []
+    },
+    {
+      "mode": "data",
+      "type": "template_cloudinit_config",
+      "name": "inbound_traffic_controller",
+      "provider": "provider.template",
+      "instances": []
+    },
+    {
+      "mode": "data",
+      "type": "template_cloudinit_config",
+      "name": "installer",
+      "provider": "provider.template",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "base64_encode": true,
+            "gzip": true,
+            "id": "1139758323",
+            "part": [
+              {
+                "content": "#!/bin/bash\n\nmkdir -p /opt/anypoint/runtimefabric\ncat \u003e\u003e /opt/anypoint/runtimefabric/env \u003c\u003cEOF\nRTF_NODE_ROLE=controller_node\nRTF_INSTALL_ROLE=leader\nRTF_INSTALL_PACKAGE_URL=\"\"\nRTF_ETCD_DEVICE_SIZE=60G\nRTF_DOCKER_DEVICE_SIZE=250G\nRTF_TOKEN=\"sOH0xEcUA1x7tpbZ\"\nRTF_NAME=\"runtime-fabric\"\nRTF_ACTIVATION_DATA=\"YW55cG9pbnQubXVsZXNvZnQuY29tOjdmZDk0OGE5LWMwNGEtNDJiYi1iMTFhLTAyZTNkOWJmMDc0Mw==\"\nRTF_ORG_ID=\"\"\nRTF_REGION=\"us-east-1\"\nRTF_ENDPOINT=\"https://anypoint.mulesoft.com\"\nRTF_AUTH_TOKEN=\"\"\nRTF_MULE_LICENSE='2+W35iUhD9n6UzfSh144qHKlIsjMqSBw/YescXleQkGpfhLfKc4CGYnihgQo/6fKMpYrSCvCybcFkM7GspNi+aVJDAvpGyyfkpeNWx7x0ygE3eFPipCTZ/r/dTOTC8IrpGwcc6bHn1eneO9PMPQrLkqxS6GAbumpGMgoJe23ttaRz94FvcKxkq5IjGQiqnY/U7cKnnwFtK0A+7XiU5J5ROYrBIZPW6QEa31RPdummqQib3eAKn+mBubzLeTsIYcP28ne4T37A1OILlyGtDCML/Jfe/nMfncRzZx6lnuJvz5jlBqaRKSKa3Y6/aySAmOYa1KHWVbVeys8lOi5qbJS3qAzTzP40coX9XBwGo3iHx25NLqtL9b50/4vAOkAfbwSJegaKNJIrhz1dRomVEXBpForc+K9obSIt9FU8uH2HDlNfcytk/GeU2dglfcldrFCYnBYoWHvGcTAHMBxpt8XAu6UWKJs6NVTxHd98ZGDs4W0LHHqHDJUqn+sNMKKSdeTzwEzdMgGsxsYfEv6OUSgOrWMYOngpKDpchMt0ISgVpeNFo2XSCrjnA8cKx9uZ+UbD/d5zYRlU69OmPAUCNNvWNWMcptARZhbM9x+aNfixuOXmQuQUCCo6ln3X9HxTEsYTb6tLk280E9k0atMdddYjZIvhc1uuu1n3iDUgLxypMNtl8S0O4KH/iZ3Z4c6SB8VmaZxI+SHay8FIS9bttbhpLMlGQO1fxn8GH8og1D5ptYQpYhjctkCIHRADlUZ5oo9ZcO415gcn8kTYXa8gMK1Jn/YCNghMU9EFOWHHisCMwa9vdh1YFmTQLJWDklV0OoUHrze0C3csxSY2BlhVWRNceTogY2vQXa8rasxsM9Lz2dy1kGrkhxxNyT4z0YfEvIfCXFVN2csD1QeeKaFwFn6V2k+pxm5PwhOfABQJ9AqJWQ502rzNxXnFDu9yeRyykShA64ZsPrqZyD7KGe3zfj9qGawK+WJJR'\nRTF_HTTP_PROXY=''\nRTF_NO_PROXY=''\nRTF_MONITORING_PROXY=''\nRTF_SERVICE_UID=''\nRTF_SERVICE_GID=''\nRTF_AGENT_URL=''\nPOD_NETWORK_CIDR='10.244.0.0/16'\nSERVICE_CIDR='10.100.0.0/16'\nEOF\n",
+                "content_type": "text/x-shellscript",
+                "filename": "envvars.sh",
+                "merge_type": ""
+              },
+              {
+                "content": "#!/bin/bash\nset -eo pipefail\n\n# Constants\nSCRIPT_VERSION='20200117-a53e64e'\nREDIRECT_LOG=/var/log/rtf-init.log\nFSTAB_COMMENT=\"# Added by RTF\"\nBASE_DIR=/opt/anypoint/runtimefabric\nSTATE_DIR=$BASE_DIR/.state\nSKIP_TEXT=\"Skipped. Already executed.\"\nMETADATA_IP=169.254.169.254\nCURL_OPTS=\"-L -k -sS --fail --connect-timeout 10 --retry 5 --retry-delay 15\"\nCURL_METADATA_OPTS=\"${CURL_OPTS} --noproxy ${METADATA_IP}\"\nAWS_METADATA_URL=http://$METADATA_IP/latest/meta-data\nAZURE_METADATA_HEADER=\"Metadata:true\"\nAZURE_METADATA_URL=http://$METADATA_IP/metadata/instance\nAZURE_METADATA_VERSION=2017-08-01\nDOCKER_MOUNT=/var/lib/gravity\nETCD_MOUNT=/var/lib/gravity/planet/etcd\nREGISTRATION_ATTEMPTS=5\nJOINING_ATTEMPTS=10\nGRAVITY_BASH=\"gravity planet enter -- --notty /usr/bin/bash -- -c\"\nSYSTEM_NO_PROXY=\"kubernetes.default.svc,.local,0.0.0.0/0\"\nACTIVATION_PROPERTIES_FILE=activation-properties.json\nKUBECTL_CMD_PREFIX=${KUBECTL_CMD_PREFIX:-\"gravity planet enter -- --notty /usr/bin/kubectl --\"}\nHELM=\"gravity planet enter -- --notty /usr/bin/helm --\"\nCURRENT_STEP=init\nCURRENT_STEP_NBR=0\nSEP=\"Done.\\n\"\nLINE=\"\\n================================================\"\n\n# Defaults\nRTF_SERVICE_UID=${RTF_SERVICE_UID:-1000}\nRTF_SERVICE_GID=${RTF_SERVICE_GID:-1000}\nPOD_NETWORK_CIDR=${POD_NETWORK_CIDR:-10.244.0.0/16}\nSERVICE_CIDR=${SERVICE_CIDR:-10.100.0.0/16}\n\n# ADDITIONAL_ENV_VARS_PLACEHOLDER_DO_NOT_REMOVE\n\n# detect OS\ncase \"$(uname -s)\" in\n    Darwin*)\n      BASE64_DECODE_OPTS=\"-D\"\n      ;;\n    *)\n      BASE64_DECODE_OPTS=\"-d\"\nesac\n\nfunction on_exit {\n  local trap_code=$?\n  if [ $trap_code -ne 0 ] ; then\n    local ANCHOR=$(echo ${CURRENT_STEP} | tr \"_\" \"-\")\n    echo\n    echo \"***********************************************************\"\n    echo \"** Oh no! Your installation has stopped due to an error. **\"\n    echo \"***********************************************************\"\n    echo \"  1. Visit the troubleshooting guide for help:\"\n    echo \"     https://docs.mulesoft.com/runtime-fabric/latest/troubleshoot-guide#${ANCHOR}\"\n    echo\n    echo \"  2. Resume installation by running ${BASE_DIR}/init.sh\"\n    echo\n    echo \"Additional information: Error code: $trap_code; Step: ${CURRENT_STEP}; Line: ${TRAP_LINE:--};\"\n    echo\n\n  fi\n\n  echo -n $SCRIPT_VERSION \u003e $STATE_DIR/version\n}\n\nfunction on_error {\n    TRAP_LINE=$1\n}\n\ntrap 'on_error $LINENO' ERR\ntrap on_exit EXIT\n\nfunction run_step() {\n    CURRENT_STEP=$1\n    local DESCRIPTION=$2\n    (( CURRENT_STEP_NBR++ )) || true\n    echo\n    echo -e \"${CURRENT_STEP_NBR} / ${STEP_COUNT}: ${DESCRIPTION}${LINE}\"\n    if [ -f ${STATE_DIR}/${CURRENT_STEP} ]; then\n        echo ${SKIP_TEXT}\n        return 0\n    fi\n    eval ${CURRENT_STEP}\n    touch ${STATE_DIR}/${CURRENT_STEP}\n    echo -e ${SEP}\n}\n\nfunction simple_json_get () {\n    local prop=$1\n    local json=$2\n    local regex=\"\\\"$prop\\\":\\\"([^\\\"]+)\\\"\"\n\n    if [[ $json =~ $regex ]]; then\n        echo -n ${BASH_REMATCH[1]}\n    else\n        echo \"Error: Failed to extract json property: \\\"$prop\\\" from $json\"\n        exit 1\n    fi\n}\n\nfunction check_root_user() {\n    CURRENT_STEP=$FUNCNAME\n    if [[ $EUID -ne 0 ]]; then\n        echo \"Error: You are not running as root. Runtime Fabric requires elevated privileges to install.\"\n        return 1\n    fi\n}\n\nfunction load_environment {\n    CURRENT_STEP=$FUNCNAME\n    if [ -f $BASE_DIR/env ]; then\n        . $BASE_DIR/env\n    fi\n\n    if [ -z \"$RTF_HTTP_PROXY\" ]; then\n        RTF_HTTP_PROXY=${HTTP_PROXY:-}\n    fi\n\n    if [ -z \"$RTF_NO_PROXY\" ]; then\n        RTF_NO_PROXY=${NO_PROXY:-}\n    fi\n}\n\nfunction decode_activation_data() {\n    CURRENT_STEP=$FUNCNAME\n    if [ \"$RTF_ACTIVATION_DATA\" == \"skip\" ]; then\n        echo \"Skipped $CURRENT_STEP. RTF_ACTIVATION_DATA=skip.\"\n        return 0\n    fi\n    decoded=$(echo -n $RTF_ACTIVATION_DATA | base64 $BASE64_DECODE_OPTS)\n    RTF_ENDPOINT=$(echo $decoded | cut -d':' -f 1)\n    RTF_ACTIVATION_TOKEN=$(echo $decoded | cut -d':' -f 2)\n}\n\nfunction fetch_activation_properties() {\n    CURRENT_STEP=$FUNCNAME\n    if [ -z \"$RTF_ACTIVATION_TOKEN\" ]; then\n        echo \"Skipped $CURRENT_STEP. RTF_ACTIVATION_TOKEN not set.\"\n        return 0\n    fi\n    if [ -f $STATE_DIR/install_rtf_components ]; then\n        echo \"Skipped $CURRENT_STEP. Not installing RTF components.\"\n        return 0\n    fi\n    echo \"Fetching activation properties...\"\n\n    if [ ! -z $RTF_ENDPOINT ] \u0026\u0026 [[ $RTF_ENDPOINT != http* ]]; then\n        RTF_ENDPOINT=\"https://$RTF_ENDPOINT\"\n    fi\n\n    COUNT=0\n    while :\n    do\n        CODE=$($CURL_WITH_PROXY $CURL_OPTS -w \"%{http_code}\" $RTF_ENDPOINT/runtimefabric/api/activationData -H \"Authorization: $RTF_ACTIVATION_TOKEN\" -H \"Accept: application/json\" -o $ACTIVATION_PROPERTIES_FILE || true)\n        if [ \"$CODE\" == \"200\" ]; then\n            break\n        fi\n        let COUNT=COUNT+1\n        if [ $COUNT -ge 8 ]; then\n            echo \"Error: Failed to fetch $COUNT times, giving up.\"\n            exit 1\n        fi\n        echo \"Retrying in $((10 * $COUNT)) seconds...\"\n        sleep $((10 * $COUNT))\n    done\n\n    if [ -z \"$RTF_INSTALL_PACKAGE_URL\" ]; then\n        RTF_INSTALL_PACKAGE_URL=$(simple_json_get RTF_INSTALL_PACKAGE_URL `cat $ACTIVATION_PROPERTIES_FILE`)\n    fi\n\n    if [ ! -z $RTF_INSTALL_PACKAGE_URL ] \u0026\u0026 [[ $RTF_INSTALL_PACKAGE_URL != http* ]]; then\n        RTF_INSTALL_PACKAGE_URL=\"https://$RTF_INSTALL_PACKAGE_URL\"\n    fi\n\n    rm $ACTIVATION_PROPERTIES_FILE\n}\n\nfunction detect_properties() {\n    CURRENT_STEP=$FUNCNAME\n    if [ -z \"$RTF_PRIVATE_IP\" ]; then\n        echo \"RTF_PRIVATE_IP is not set, attempting to detect cloud provider\"\n\n        # Detect cloud provider by hitting instance metadata service. For azure, tags are converted to ENV_VARs\n        HTTP_CODE=$(curl $CURL_METADATA_OPTS -o /dev/null -w \"%{http_code}\" $AWS_METADATA_URL/ || true)\n        if [ $HTTP_CODE == 200 ]; then\n            echo \"Detected cloud provider: AWS\"\n            RTF_PRIVATE_IP=$(curl $CURL_METADATA_OPTS $AWS_METADATA_URL/local-ipv4)\n        else\n            HTTP_CODE=$(curl $CURL_METADATA_OPTS -o /dev/null -w \"%{http_code}\" -H$AZURE_METADATA_HEADER \"$AZURE_METADATA_URL/?api-version=$AZURE_METADATA_VERSION\" || true)\n            if [ $HTTP_CODE == 200 ]; then\n                echo \"Detected cloud provider: Azure\"\n                RTF_PRIVATE_IP=$(curl $CURL_METADATA_OPTS -H$AZURE_METADATA_HEADER \"$AZURE_METADATA_URL/network/interface/0/ipv4/ipAddress/0/privateIpAddress?api-version=$AZURE_METADATA_VERSION\u0026format=text\")\n                TAGS=$(curl $CURL_METADATA_OPTS -H$AZURE_METADATA_HEADER \"$AZURE_METADATA_URL/compute/tags?api-version=$AZURE_METADATA_VERSION\u0026format=text\")\n                IFS=';' read -ra TAG_ARRAY \u003c\u003c\u003c \"$TAGS\"\n                for i in \"${TAG_ARRAY[@]}\"; do\n                    IFS=':' read -ra THIS_TAG \u003c\u003c\u003c \"$i\"\n                    declare -g \"${THIS_TAG[0]}=${THIS_TAG[1]}\"\n                done\n            fi\n        fi\n    fi\n\n    if [ -z $RTF_HTTP_PROXY ]; then\n        CURL_WITH_PROXY=\"curl\"\n    else\n        CURL_WITH_PROXY=\"curl --proxy $RTF_HTTP_PROXY\"\n    fi\n\n    # Update NO_PROXY to make sure we bypass local addresses\n    export NO_PROXY=\"0.0.0.0/0,.local,${NO_PROXY}\"\n\n    return 0\n}\n\nfunction validate_properties() {\n    CURRENT_STEP=$FUNCNAME\n    echo \"Validating properties...\"\n    echo RTF_PRIVATE_IP: $RTF_PRIVATE_IP\n    echo RTF_NODE_ROLE: $RTF_NODE_ROLE\n    echo RTF_INSTALL_ROLE: $RTF_INSTALL_ROLE\n    echo RTF_DOCKER_DEVICE: $RTF_DOCKER_DEVICE\n    echo RTF_ETCD_DEVICE: $RTF_ETCD_DEVICE\n    echo RTF_DOCKER_DEVICE_SIZE: $RTF_DOCKER_DEVICE_SIZE\n    echo RTF_ETCD_DEVICE_SIZE: $RTF_ETCD_DEVICE_SIZE\n    echo RTF_HTTP_PROXY: $RTF_HTTP_PROXY\n    echo RTF_NO_PROXY: $RTF_NO_PROXY\n    echo HTTP_PROXY: $HTTP_PROXY\n    echo HTTPS_PROXY: $HTTPS_PROXY\n    echo NO_PROXY: $NO_PROXY\n    echo RTF_MONITORING_PROXY: $RTF_MONITORING_PROXY\n    echo RTF_SERVICE_UID: $RTF_SERVICE_UID\n    echo RTF_SERVICE_GID: $RTF_SERVICE_GID\n\n    [ -z \"$RTF_INSTALL_ROLE\" ] \u0026\u0026 echo \"Error: RTF_INSTALL_ROLE not set\" \u0026\u0026 exit 1\n    [ -z \"$RTF_NODE_ROLE\" ] \u0026\u0026 echo \"Error: RTF_NODE_ROLE not set\" \u0026\u0026 exit 1\n\n    # Install-leader properties\n    if [ $RTF_INSTALL_ROLE == \"leader\" ]; then\n        echo RTF_INSTALL_PACKAGE_URL: $RTF_INSTALL_PACKAGE_URL\n        echo RTF_TOKEN: $RTF_TOKEN\n        echo RTF_NAME: $RTF_NAME\n        # Registration properties\n        echo RTF_ACTIVATION_TOKEN: $RTF_ACTIVATION_TOKEN\n        echo RTF_MULE_LICENSE: ...$(echo $RTF_MULE_LICENSE | tail -c 10)\n        [ -z \"$RTF_NAME\" ] \u0026\u0026 echo \"Error: RTF_NAME not set\" \u0026\u0026 exit 1\n    else\n        echo RTF_INSTALLER_IP: $RTF_INSTALLER_IP\n        [ -z \"$RTF_INSTALLER_IP\" ] \u0026\u0026 echo \"Error: RTF_INSTALLER_IP\" \u0026\u0026 exit 1\n    fi\n\n    [ -z \"$RTF_PRIVATE_IP\" ] \u0026\u0026 echo \"Error: RTF_PRIVATE_IP not set\" \u0026\u0026 exit 1\n    [ -z \"$RTF_DOCKER_DEVICE\" ] \u0026\u0026 [ -z \"$RTF_DOCKER_DEVICE_SIZE\" ] \u0026\u0026 echo \"Error: RTF_DOCKER_DEVICE or RTF_DOCKER_DEVICE_SIZE must be set\" \u0026\u0026 exit 1\n    [ -z \"$RTF_TOKEN\" ] \u0026\u0026 echo \"Error: RTF_TOKEN not set\" \u0026\u0026 exit 1\n\n    if [ $RTF_NODE_ROLE == \"controller_node\" ] || [ $RTF_NODE_ROLE == \"general_node\" ]; then\n        [ -z \"$RTF_ETCD_DEVICE\" ] \u0026\u0026 [ -z \"$RTF_ETCD_DEVICE_SIZE\" ] \u0026\u0026 echo \"Error: RTF_ETCD_DEVICE or RTF_ETCD_DEVICE_SIZE must be set\" \u0026\u0026 exit 1\n    fi\n    return 0\n}\n\nfunction install_required_packages() {\n    #disable exit-on-error\n    set +e\n    rpm -q chrony\n    if [ $? != 0 ]; then\n        echo \"Installing chrony...\"\n        yum install -y chrony || true\n    fi\n\n    printf \"Checking chrony sync status...\"\n    COUNT=0\n    while :\n    do\n        chronyc tracking | grep -E 'Leap status\\s+:\\s+Normal'\n        if [ \"$?\" == \"0\" ]; then\n            echo \"[OK]\"\n            break\n        fi\n        let COUNT=COUNT+1\n        if [ $COUNT -ge \"3\" ]; then\n            echo \"Error: chrony sync check failed $COUNT times, giving up.\"\n            exit 1\n        fi\n        echo \"Retrying in 30 seconds...\"\n        sleep 30\n    done\n    # enable exit-on-error\n    set -e\n}\n\n\nfunction format_and_mount_disks() {\n\n    # if we specify the size, discover the disk from lsblk\n    if [ -n \"$RTF_DOCKER_DEVICE_SIZE\" ]; then\n        set +e\n        RTF_DOCKER_DEVICE=/dev/$(lsblk --inverse --nodeps --noheadings --output NAME,TYPE,SIZE | grep $RTF_DOCKER_DEVICE_SIZE | cut -d ' ' -f 1 | head -n1)\n        set -e\n        if [ \"$RTF_DOCKER_DEVICE\" == \"/dev/\" ]; then\n            echo \"Error: $RTF_DOCKER_DEVICE_SIZE docker disk not found\"\n            lsblk\n            exit 1\n        fi\n    else\n        # devices could be symlinks, resolve now\n        if [ -f $RTF_DOCKER_DEVICE ]; then\n            RTF_DOCKER_DEVICE=$(readlink -fe \"$RTF_DOCKER_DEVICE\")\n        fi\n        # ensure device is a real block device\n        echo \"Querying block devices for $RTF_DOCKER_DEVICE...\"\n        lsblk $RTF_DOCKER_DEVICE\n    fi\n\n    echo \"Initializing docker filesystem ($RTF_DOCKER_DEVICE)...\"\n    if [ -d \"$DOCKER_MOUNT\" ]; then\n        umount -l $DOCKER_MOUNT || true\n        rm -r $DOCKER_MOUNT\n    fi\n    mkfs.xfs -n ftype=1 -f $RTF_DOCKER_DEVICE\n    # get the UUID\n    RTF_DOCKER_DEVICE_UUID=$(blkid $RTF_DOCKER_DEVICE -ovalue | head -1)\n\n    sed -i.bak '/RTF/d' /etc/fstab\n    echo -e \"UUID=$RTF_DOCKER_DEVICE_UUID\\t$DOCKER_MOUNT\\txfs\\tdefaults,nofail\\t0\\t2\\t$FSTAB_COMMENT\" \u003e\u003e /etc/fstab\n\n    mkdir -p $DOCKER_MOUNT\n    mount $DOCKER_MOUNT\n    chown -R $RTF_SERVICE_UID:$RTF_SERVICE_GID $DOCKER_MOUNT\n\n    if [ \"$RTF_NODE_ROLE\" == \"controller_node\" ] || [ $RTF_NODE_ROLE == \"general_node\" ]; then\n\n        # if we specify the size, discover the disk from lsblk\n        if [ -n \"$RTF_ETCD_DEVICE_SIZE\" ]; then\n            set +e\n            RTF_ETCD_DEVICE=/dev/$(lsblk --inverse --nodeps --noheadings --output NAME,TYPE,SIZE | grep $RTF_ETCD_DEVICE_SIZE | cut -d ' ' -f 1 | head -n1)\n            set -e\n            if [ \"$RTF_ETCD_DEVICE\" == \"/dev/\" ]; then\n                echo \"Error: $RTF_ECTD_DEVICE_SIZE etcd disk not found\"\n                lsblk\n                exit 1\n            fi\n        else\n            # devices could be symlinks, resolve now\n            if [ -f $RTF_ETCD_DEVICE ]; then\n                RTF_ETCD_DEVICE=$(readlink -f \"$RTF_ETCD_DEVICE\")\n            fi\n            echo \"Querying block devices for $RTF_ETCD_DEVICE...\"\n            lsblk $RTF_ETCD_DEVICE\n        fi\n        echo \"Initializing etcd filesystem ($RTF_ETCD_DEVICE)...\"\n        if [ -d \"$ETCD_MOUNT\" ]; then\n            umount -l $ETCD_MOUNT || true\n            rm -r $ETCD_MOUNT\n        fi\n        mkfs.xfs -n ftype=1 -f $RTF_ETCD_DEVICE\n        # get the UUID\n        RTF_ETCD_DEVICE_UUID=$(blkid $RTF_ETCD_DEVICE -ovalue | head -1)\n        echo -e \"UUID=$RTF_ETCD_DEVICE_UUID\\t$ETCD_MOUNT\\txfs\\tdefaults,nofail\\t0\\t2\\t$FSTAB_COMMENT\" \u003e\u003e /etc/fstab\n        mkdir -p $ETCD_MOUNT\n        mount $ETCD_MOUNT\n        chown -R $RTF_SERVICE_UID:$RTF_SERVICE_GID $ETCD_MOUNT\n    fi\n}\n\nfunction configure_ip_tables() {\n    systemctl disable firewalld || true\n    systemctl stop firewalld || true\n\n    # Insert IP tables rules\n    echo -e '*filter\\n:INPUT ACCEPT [0:0]\\n:FORWARD ACCEPT [0:0]\\n:OUTPUT ACCEPT [0:0]\\n-A OUTPUT -o lo -j ACCEPT\\n-A OUTPUT -d 172.31.0.0/16 -p tcp -j ACCEPT\\n-A OUTPUT -d 172.31.0.0/16 -p udp -j ACCEPT\\n-A OUTPUT -d 10.0.0.0/8 -p tcp -j ACCEPT\\n-A OUTPUT -d 10.0.0.0/8 -p udp -j ACCEPT\\n-A OUTPUT -p tcp -m tcp ! --tcp-flags FIN,SYN,RST,ACK SYN -j ACCEPT\\n-A OUTPUT -p udp --dport 123 -j ACCEPT\\n-A INPUT -p udp --sport 123 -j ACCEPT\\nCOMMIT' \u003e /etc/rtf-iptables.rules\n    echo -e '[Unit]\\nDescription=Packet Filtering Framework\\n\\n[Service]\\nType=oneshot\\nExecStart=/usr/sbin/iptables-restore /etc/rtf-iptables.rules\\nExecReload=/usr/sbin/iptables-restore /etc/rtf-iptables.rules\\nRemainAfterExit=yes\\n\\n[Install]\\nWantedBy=multi-user.target' \u003e /etc/systemd/system/iptables.service\n}\n\nfunction configure_kernel_modules() {\n    modprobe br_netfilter || true\n    modprobe ebtable_filter || true\n    modprobe overlay || true\n    modprobe ip_tables || true\n    modprobe iptable_filter || true\n    modprobe iptable_nat || true\n\n    cat \u003e /etc/modules-load.d/telekube.conf \u003c\u003cEOF\nip_tables\niptable_nat\niptable_filter\nbr_netfilter\noverlay\nebtable_filter\nEOF\n\n    cat \u003e /etc/sysctl.d/50-telekube.conf \u003c\u003cEOF\nnet.ipv4.ip_forward=1\nnet.bridge.bridge-nf-call-iptables=1\nEOF\n\n    if sysctl -q fs.may_detach_mounts \u003e/dev/null 2\u003e\u00261; then\n      echo \"fs.may_detach_mounts=1\" \u003e\u003e /etc/sysctl.d/50-telekube.conf\n    fi\n\n    sysctl -p /etc/sysctl.d/50-telekube.conf\n}\n\nfunction start_system_services() {\n    systemctl --system daemon-reload\n    systemctl enable iptables.service\n    systemctl enable chronyd\n    systemctl start iptables.service\n    systemctl start chronyd\n}\n\nfunction fetch_rtfctl() {\n    if [[ -z $RTF_ENDPOINT ]]; then\n        RTFCTL_URL=https://anypoint.mulesoft.com/runtimefabric/api/download/rtfctl/latest\n    else\n        RTFCTL_URL=${RTF_ENDPOINT}/runtimefabric/api/download/rtfctl/latest\n    fi\n\n    echo \"Fetching rtfctl ${RTFCTL_URL}...\"\n    $CURL_WITH_PROXY $CURL_OPTS -o rtfctl $RTFCTL_URL\n    chmod +x ./rtfctl\n}\n\nfunction add_cgroup_cleanup_job() {\n  source /etc/os-release\n  if [[ $VERSION_ID != 7* ]]; then\n    echo \"Skipped. Detected OS version: $VERSION_ID, not compatible.\"\n    return 0\n  fi\n\n  mkdir -p /var/lib/gravity/cron\n\n  cat \u003e /var/lib/gravity/cron/systemd_gc.sh \u003c\u003c\"EOF\"\n#!/bin/bash\n\necho \"$(date) - Starting systemd_gc job\"\n\ncount=0\nfor i in $(find /sys/fs/cgroup/ -name run-*.scope -type d -printf \"%f\\n\"); do\n  pod=$(systemctl list-units --type scope --state running $i | cat | sed -n 's/\\(.*\\)Kubernetes transient mount for \\/var\\/lib\\/kubelet\\/pods\\/\\(.*\\)\\/volumes\\(.*\\)/\\2/p')\n  if [ ! -f \"/var/lib/kubelet/pods/'$pod'\" ]; then\n    echo -n \"Trying to stop '$i' systemd scope... \"\n    systemctl stop $i\n    echo \"Stopped.\"\n    count=$((count + 1))\n  fi\ndone\n\necho \"Total ${count} systemd scope stopped.\"\necho \"$(date) - Completed systemd_gc job\"\nEOF\n\n  chmod +x /var/lib/gravity/cron/systemd_gc.sh\n\n  ADD_CRON_JOB_CMD=\"cat \u003e /etc/cron.d/systemd_gc \u003c\u003cEOF\nSHELL=/bin/bash\n\n# Can be updated to a different time: 0-59 0-23 * * *\n$(shuf -i 0-59 -n 1) 0 * * * root  /var/lib/gravity/cron/systemd_gc.sh \u003e\u003e /var/lib/gravity/cron/systemd_gc.log 2\u003e\u00261\nEOF\"\n\n  $GRAVITY_BASH \"$ADD_CRON_JOB_CMD\"\n\n  cat \u003e /etc/logrotate.d/systemd_gc \u003c\u003cEOF\n/var/lib/gravity/cron/systemd_gc.log {\n  daily\n  size 10M\n  missingok\n  notifempty\n  rotate 1\n}\nEOF\n\n  $GRAVITY_BASH \"/var/lib/gravity/cron/systemd_gc.sh\"\n\n  echo \"Added cgroup cleanup job.\"\n}\n\nfunction fetch_install_package() {\n    if [[ ! -z $RTF_INSTALL_PACKAGE_URL ]]; then\n        echo \"Fetching installation package \\\"$RTF_INSTALL_PACKAGE_URL\\\"...\"\n        $CURL_WITH_PROXY $CURL_OPTS $RTF_INSTALL_PACKAGE_URL -o installer.tar.gz\n    else\n        until [ -f $BASE_DIR/installer.tar.gz ]; do\n            echo \"Waiting for installation package at $BASE_DIR/installer.tar.gz...\"\n            sleep 15\n        done\n    fi\n\n    if [ ! -f $BASE_DIR/installer.tar.gz ]; then\n        echo \"Error: failed to fetch installation package. Exiting.\"\n        exit 1\n    fi\n}\n\nfunction install_cluster() {\n    echo \"Extracting installer package...\"\n    mkdir -p installer\n    tar -zxf installer.tar.gz -C installer\n    cd installer\n\n    GRAVITY_VERSION=$(./gravity version | grep \"^Version:\" | awk '{ print $2 }')\n    if [[ ${GRAVITY_VERSION} != \"5.2\"* ]] \u0026\u0026 [ -n \"${RTF_HTTP_PROXY}\" ]; then\n        cat \u003e ../runtime_environment.yaml \u003c\u003cEOF\nkind: RuntimeEnvironment\nversion: v1\nspec:\n  data:\n    HTTP_PROXY: \"${RTF_HTTP_PROXY}\"\n    http_proxy: \"${RTF_HTTP_PROXY}\"\n    HTTPS_PROXY: \"${RTF_HTTP_PROXY}\"\n    NO_PROXY: \"${SYSTEM_NO_PROXY},${RTF_NO_PROXY}\"\nEOF\n    local EXTRA_CONFIG=--config=../runtime_environment.yaml\n    fi\n\n    FLAVOR=dynamic\n    if [ $RTF_NODE_ROLE == \"general_node\" ]; then\n        FLAVOR=demo\n    fi\n\n    ./gravity install --advertise-addr=$RTF_PRIVATE_IP \\\n      --token=$RTF_TOKEN \\\n      --cluster=$RTF_NAME \\\n      --cloud-provider=generic \\\n      --flavor=$FLAVOR \\\n      --role=$RTF_NODE_ROLE \\\n      --pod-network-cidr=$POD_NETWORK_CIDR \\\n      --service-cidr=$SERVICE_CIDR \\\n      --service-uid=$RTF_SERVICE_UID \\\n      --service-gid=$RTF_SERVICE_GID \\\n      ${EXTRA_CONFIG}\n\n    if [ ! -f /usr/bin/gravity ]; then\n        echo \"Error: /usr/bin/gravity does not exist\"\n        exit 1\n    fi\n\n    # ensure we have completed the installation by inspecting our cluster-info cm\n    ${KUBECTL_CMD_PREFIX} get configmap cluster-info -nkube-system \u003e /dev/null\n\n    # load KUBECONFIG environment variable for rtfctl\n    set -o allexport; source /etc/environment; set +o allexport\n\n    cd $BASE_DIR\n}\n\nfunction inject_proxy_into_dockerd() {\n    if [ -z $RTF_HTTP_PROXY ]; then\n        echo \"Skipped. HTTP proxy not configured\"\n        return 0\n    fi\n    # we only need this for 5.2.* versions\n    if [[ ${GRAVITY_VERSION} != \"5.2\"* ]]; then\n        return 0\n    fi\n\n    echo \"Injecting HTTP proxy into Docker daemon...\"\n\n    DOCKER_PROXY_VARS_CMD=\"cat \u003e /etc/systemd/system/docker.service.d/http-proxy-vars.conf \u003c\u003cEOF\nHTTP_PROXY=$RTF_HTTP_PROXY\nHTTPS_PROXY=$RTF_HTTP_PROXY\nNO_PROXY=$SYSTEM_NO_PROXY,$RTF_NO_PROXY\nEOF\"\n    $GRAVITY_BASH \"$DOCKER_PROXY_VARS_CMD\"\n\n    # we use EnvironmentFile so that systemd can parse special characters in the proxy string\n    DOCKER_PROXY_CMD=\"cat \u003e /etc/systemd/system/docker.service.d/http-proxy.conf \u003c\u003cEOF\n[Service]\nEnvironmentFile=/etc/systemd/system/docker.service.d/http-proxy-vars.conf\nEOF\"\n    $GRAVITY_BASH \"$DOCKER_PROXY_CMD\"\n\n    gravity planet enter -- --notty  /usr/bin/systemctl -- daemon-reload\n    gravity planet enter -- --notty  /usr/bin/systemctl -- restart docker\n}\n\nfunction join_cluster() {\n    echo \"Joining cluster, waiting for installer node to complete...\"\n\n    # disable exit-on-error\n    set +e\n    until [ -f gravity ]; do\n        sleep 15\n        curl $CURL_OPTS https://$RTF_INSTALLER_IP:32009/telekube/gravity -o gravity\n    done\n    chmod +x gravity\n\n    # if we are setting the proxy, we must wait until the agent has installed, because it\n    # restarts dockerd on the leader and causes join to hang for v1.0.x installers\n    GRAVITY_VERSION=$(./gravity version | grep \"^Version:\" | awk '{ print $2 }')\n    if [[ ${GRAVITY_VERSION} == \"5.2\"* ]] \u0026\u0026 [ -n $RTF_HTTP_PROXY ]; then\n        until [ -f .rtf_installed_flag ]; do\n            sleep 15\n            curl $CURL_OPTS http://$RTF_INSTALLER_IP:30945/api/v1/status/info -o .rtf_installed_flag\n        done\n    fi\n\n    COUNT=0\n    while :\n    do\n        export GRAVITY_PEER_CONNECT_TIMEOUT=60m\n        ./gravity join $RTF_INSTALLER_IP --advertise-addr=$RTF_PRIVATE_IP --token=$RTF_TOKEN --cloud-provider=generic --role=$RTF_NODE_ROLE\n\n        if [ \"$?\" == \"0\" ]; then\n            if [ ! -f /usr/bin/gravity ]; then\n                echo \"Error: /usr/bin/gravity does not exist\"\n                exit 1\n            fi\n            break\n        fi\n\n        let COUNT=COUNT+1\n        if [ $COUNT -ge $JOINING_ATTEMPTS ]; then\n            echo \"Error: Failed to register $COUNT times, giving up.\"\n            exit 1\n        fi\n        echo \"Retrying joining the cluster in 30 seconds...\"\n        sleep 30\n    done\n\n    # enable exit-on-error\n    set -e\n}\n\nfunction create_rtf_namespace() {\n    ${KUBECTL_CMD_PREFIX} create ns rtf || true\n    ${KUBECTL_CMD_PREFIX} label ns rtf rtf.mulesoft.com/role=rtf || true\n}\n\nfunction install_rtf_components() {\n    if [ -z \"$RTF_ACTIVATION_TOKEN\" ]; then\n        echo \"Skipped. RTF_ACTIVATION_TOKEN not set.  Creating namespace only.\"\n        create_rtf_namespace\n        return 0\n    fi\n\n    if [ -z \"$RTF_AGENT_URL\" ]; then\n        HTTP_PROXY=\"$RTF_HTTP_PROXY\" MONITORING_PROXY=\"$RTF_MONITORING_PROXY\" ./rtfctl install ${RTF_ACTIVATION_DATA}\n    else\n        HTTP_PROXY=\"$RTF_HTTP_PROXY\" MONITORING_PROXY=\"$RTF_MONITORING_PROXY\" ./rtfctl install ${RTF_ACTIVATION_DATA} --helm-chart-location ${RTF_AGENT_URL}\n    fi\n}\n\nfunction wait_for_connectivity() {\n    ./rtfctl wait\n}\n\nfunction install_mule_license() {\n    if [ -z \"$RTF_MULE_LICENSE\" ]; then\n        echo \"Skipped. RTF_MULE_LICENSE not set\"\n        return 0\n    fi\n    echo \"Configuring Mule license...\"\n    ./rtfctl apply mule-license \"$RTF_MULE_LICENSE\"\n}\n\nfunction generate_ops_center_credentials() {\n    ADMIN_PASSWORD=\"$(env LC_CTYPE=C tr -dc 'a-zA-Z0-9' \u003c /dev/urandom | head -c50)\" || true\n    if [ -z \"$ADMIN_PASSWORD\" ]; then\n        echo \"Error: Failed to generate admin password\"\n        exit 1;\n    fi\n\n    set +e\n    OPCENTER_CMD=\"gravity planet enter -- --notty /usr/bin/gravity -- user create --type=admin --email=admin@runtime-fabric --password=$ADMIN_PASSWORD --ops-url=https://gravity-site.kube-system.svc.cluster.local:3009 --insecure\"\n\n    eval $OPCENTER_CMD\n    CMD_EXIT_CODE=$?\n\n    COUNT=1\n    until [ \"$CMD_EXIT_CODE\" == \"0\" ]; do\n        echo\n        echo \"Retrying OpsCenter credentials in 30 seconds...\"\n        sleep 30\n        eval $OPCENTER_CMD\n        CMD_EXIT_CODE=$?\n        let COUNT=COUNT+1\n        if [ $COUNT -ge 5 ]; then\n            echo \"Error: Failed to generate OpsCenter credentials $COUNT times, giving up.\"\n            exit 1\n        fi\n    done\n    # enable exit-on-error\n    set -e\n\n    echo \"Ops Center access:\"\n    echo \"URL:      https://$RTF_PRIVATE_IP:32009/web\"\n    echo \"User:     admin@runtime-fabric\"\n    echo \"Password: $ADMIN_PASSWORD\"\n}\n\nfunction set_inotify_limit() {\n    sysctl -w fs.inotify.max_user_watches=1048576\n    echo \"fs.inotify.max_user_watches=1048576\" \u003e /etc/sysctl.d/inotify.conf\n}\n\nfunction purge() {\n    echo \"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\"\n    echo \"  WARNING: THIS WILL REMOVE ALL RUNTIME FABRIC COMPONENTS AND APPLICATIONS\"\n    echo \"!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!\"\n    read -p \"Continue (y/n)? \" choice\n    case \"$choice\" in\n        y|Y )\n            echo \"Removing RTF components...\"\n            ${HELM} delete runtime-fabric --purge || true\n\n            ${KUBECTL_CMD_PREFIX} get secret custom-properties -nrtf --export -oyaml \u003e custom_properties.yaml\n            echo \"Removing applications...\"\n            gravity planet enter -- --notty /usr/bin/kubectl -- delete ns -l rtf.mulesoft.com/role || true\n            while [ true ]; do\n                NS_REMAINING=$(gravity planet enter -- --notty /usr/bin/kubectl -- get ns --no-headers --ignore-not-found -l rtf.mulesoft.com/role | wc -l)\n                if [ \"$NS_REMAINING\" == \"0\" ]; then\n                    break\n                fi\n                sleep 1\n                echo \"Waiting for $NS_REMAINING namespaces to be removed...\"\n            done\n            rm .state/install_rtf_components .state/install_mule_license .state/wait_for_connectivity .state/init-complete || true\n        ;;\n\n    n|N ) exit\n        ;;\n    * ) echo \"Unexpected response\";;\n  esac\n  echo\n  echo \"Purge complete.\"\n}\n\nfunction activate() {\n  if [ -z \"$1\" ]; then\n    echo \"Activation data is missing, use the following: ./init.sh activate '\u003cactivation data snippet\u003e'\"\n    exit\n  fi\n\n  load_environment\n  detect_properties\n  RTF_ACTIVATION_DATA=\"$1\"\n  decode_activation_data\n  fetch_activation_properties\n  validate_properties\n  create_rtf_namespace\n\n  # if we backed up custom-properties during purge, reapply it now\n  if [ -f custom_properties.yaml ]; then\n    cp custom_properties.yaml /var/lib/gravity/rtf_custom_properties.yaml\n    ${KUBECTL_CMD_PREFIX} apply -nrtf -f /var/lib/gravity/rtf_custom_properties.yaml\n  fi\n\n  install_rtf_components\n  exit\n}\n\nfunction reinstall() {\n    RTF_ENV=${RTF_ENV:-prod}\n\n    printf \"\\nAnypoint Platform environment: ${RTF_ENV}\\n\\n\"\n\n    # reinstall is only valid to run when we have runtime-fabric installed.\n    ${HELM} status runtime-fabric\n\n    # Clean up temp directory...\n    mkdir -p reinstall-data\n    rm -rf reinstall-data/*\n\n    echo \"Discovering current configuration...\"\n\n    if [ -z $RTF_VERSION ]; then\n        RTF_VERSION=$(${KUBECTL_CMD_PREFIX} get deployment deployer -nrtf -o jsonpath=\"{.spec.template.spec.containers[0].image}\" | cut -d: -f 2 | cut -dv -f 2)\n    fi\n    echo \" - version: ${RTF_VERSION}\"\n\n    AWS_ACCESS_KEY_ID=$(${KUBECTL_CMD_PREFIX} get secret registry-creds -nrtf -ojsonpath=\"{.data.AWS_ACCESS_KEY_ID}\" | base64 -d)\n    AWS_SECRET_ACCESS_KEY=$(${KUBECTL_CMD_PREFIX} get secret registry-creds -nrtf -ojsonpath=\"{.data.AWS_SECRET_ACCESS_KEY}\" | base64 -d)\n    AWS_DEFAULT_REGION=$(${KUBECTL_CMD_PREFIX} get secret registry-creds -nrtf -ojsonpath=\"{.data.AWS_REGION}\" | base64 -d)\n\n    ${HELM} get values runtime-fabric \u003e reinstall-data/values.yaml\n\n    echo\n    echo \"Fetching RTF installation package...\"\n    awsFile=\"rtf-agent-${RTF_VERSION}.tgz\"\n    bucket=\"worker-cloud-helm-${RTF_ENV}\"\n    resource=\"/${bucket}/${awsFile}\"\n    contentType=\"application/x-compressed-tar\"\n    dateValue=`TZ=GMT date -R`\n    stringToSign=\"GET\\n\\n${contentType}\\n${dateValue}\\n${resource}\"\n    signature=`echo -en ${stringToSign} | openssl sha1 -hmac ${AWS_SECRET_ACCESS_KEY} -binary | base64`\n    curl --fail -H \"Host: ${bucket}.s3.amazonaws.com\" \\\n         -H \"Date: ${dateValue}\" \\\n         -H \"Content-Type: ${contentType}\" \\\n         -H \"Authorization: AWS ${AWS_ACCESS_KEY_ID}:${signature}\" \\\n         https://${bucket}.s3.amazonaws.com/${awsFile} -o reinstall-data/rtf-agent.tgz\n\n    cp -r reinstall-data /var/lib/gravity\n\n    echo\n    echo \"Removing current configuration...\"\n    ${HELM} delete --purge runtime-fabric\n\n    # reinstall\n    ${HELM} install /var/lib/gravity/reinstall-data/rtf-agent.tgz --name runtime-fabric --namespace rtf --wait -f /var/lib/gravity/reinstall-data/values.yaml\n    rm -rf /var/lib/gravity/reinstall-data\n}\n\n\n\n##########################################\n# Entrypoint\n##########################################\n\n# Also log output to file\nexec \u003e\u0026 \u003e(tee -a \"$REDIRECT_LOG\")\n\ncheck_root_user\n\nmkdir -p $BASE_DIR\nmkdir -p $STATE_DIR\n\nSCRIPT_DIR=$(realpath $BASH_SOURCE)\nif [[ $SCRIPT_DIR != ${BASE_DIR}* ]]; then\n   cp $BASH_SOURCE $BASE_DIR/init.sh || true\nfi\n\ncd $BASE_DIR\n\nif [ \"$1\" == \"purge\" ]; then\n    purge\n    exit\nelif [ \"$1\" == \"activate\" ]; then\n    activate \"$2\"\n    exit\nelif [ \"$1\" == \"reinstall-components\" ]; then\n    reinstall\n    exit\nelif [ \"$1\" == \"configure-system\" ]; then\n    STEP_COUNT=3\n    run_step set_inotify_limit \"Set inotify watch limits\"\n    run_step add_cgroup_cleanup_job \"Add cgroup cleanup job\"\n    run_step start_system_services \"Start system services\"\n    exit\nelif [ \"$1\" != \"\" ]; then\n    echo \"Invalid command: $1\"\n    exit 1\nfi\n\necho \"Runtime Fabric installation, version: $SCRIPT_VERSION\"\necho\n\necho -e \"Detecting properties...\"\nload_environment\ndetect_properties\ndecode_activation_data\nfetch_activation_properties\nvalidate_properties\n\nif [ \"$RTF_INSTALL_ROLE\" == \"leader\" ]; then\n    STEP_COUNT=15\nelse\n    STEP_COUNT=10\nfi\n\n# Cluster Setup\nrun_step install_required_packages \"Install required packages\"\nrun_step format_and_mount_disks \"Format and mount disks\"\nrun_step configure_ip_tables \"Configure IP tables rules\"\nrun_step configure_kernel_modules \"Enable kernel modules\"\nrun_step set_inotify_limit \"Set inotify watch limits\"\nrun_step start_system_services \"Start system services\"\nrun_step fetch_rtfctl \"Fetch rtfctl tool\"\nif [ \"$RTF_INSTALL_ROLE\" == \"leader\" ]; then\n    run_step fetch_install_package \"Fetch installation package\"\n    run_step install_cluster \"Create cluster\"\n    run_step generate_ops_center_credentials \"Generate Ops Center credentials\"\nelse\n    run_step join_cluster \"Join cluster\"\nfi\nrun_step inject_proxy_into_dockerd \"Configure dockerd proxy\"\nrun_step add_cgroup_cleanup_job \"Add cgroup cleanup job\"\n\n# RTF Setup\nif [ \"$RTF_INSTALL_ROLE\" == \"leader\" ]; then\n    run_step install_rtf_components \"Install RTF components\"\n    run_step install_mule_license \"Install Mule license\"\n    run_step wait_for_connectivity \"Wait for connectivity\"\nfi\n\necho -e \"Runtime Fabric installation complete.\"\ntouch $STATE_DIR/init-complete\n",
+                "content_type": "text/x-shellscript",
+                "filename": "init.sh",
+                "merge_type": ""
+              }
+            ],
+            "rendered": "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"
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "template_cloudinit_config",
+      "name": "worker",
+      "provider": "provider.template",
+      "instances": []
+    },
+    {
+      "mode": "data",
+      "type": "template_file",
+      "name": "controller_env",
+      "provider": "provider.template",
+      "instances": []
+    },
+    {
+      "mode": "data",
+      "type": "template_file",
+      "name": "inbound_traffic_controller_env",
+      "provider": "provider.template",
+      "instances": []
+    },
+    {
+      "mode": "data",
+      "type": "template_file",
+      "name": "installer_env",
+      "provider": "provider.template",
+      "instances": [
+        {
+          "schema_version": 0,
+          "attributes": {
+            "filename": null,
+            "id": "ccdec0c5b2696df96fbaeec7e7306900509f5bbbc415ac93ce963cc41026b405",
+            "rendered": "#!/bin/bash\n\nmkdir -p /opt/anypoint/runtimefabric\ncat \u003e\u003e /opt/anypoint/runtimefabric/env \u003c\u003cEOF\nRTF_NODE_ROLE=controller_node\nRTF_INSTALL_ROLE=leader\nRTF_INSTALL_PACKAGE_URL=\"\"\nRTF_ETCD_DEVICE_SIZE=60G\nRTF_DOCKER_DEVICE_SIZE=250G\nRTF_TOKEN=\"sOH0xEcUA1x7tpbZ\"\nRTF_NAME=\"runtime-fabric\"\nRTF_ACTIVATION_DATA=\"YW55cG9pbnQubXVsZXNvZnQuY29tOjdmZDk0OGE5LWMwNGEtNDJiYi1iMTFhLTAyZTNkOWJmMDc0Mw==\"\nRTF_ORG_ID=\"\"\nRTF_REGION=\"us-east-1\"\nRTF_ENDPOINT=\"https://anypoint.mulesoft.com\"\nRTF_AUTH_TOKEN=\"\"\nRTF_MULE_LICENSE='2+W35iUhD9n6UzfSh144qHKlIsjMqSBw/YescXleQkGpfhLfKc4CGYnihgQo/6fKMpYrSCvCybcFkM7GspNi+aVJDAvpGyyfkpeNWx7x0ygE3eFPipCTZ/r/dTOTC8IrpGwcc6bHn1eneO9PMPQrLkqxS6GAbumpGMgoJe23ttaRz94FvcKxkq5IjGQiqnY/U7cKnnwFtK0A+7XiU5J5ROYrBIZPW6QEa31RPdummqQib3eAKn+mBubzLeTsIYcP28ne4T37A1OILlyGtDCML/Jfe/nMfncRzZx6lnuJvz5jlBqaRKSKa3Y6/aySAmOYa1KHWVbVeys8lOi5qbJS3qAzTzP40coX9XBwGo3iHx25NLqtL9b50/4vAOkAfbwSJegaKNJIrhz1dRomVEXBpForc+K9obSIt9FU8uH2HDlNfcytk/GeU2dglfcldrFCYnBYoWHvGcTAHMBxpt8XAu6UWKJs6NVTxHd98ZGDs4W0LHHqHDJUqn+sNMKKSdeTzwEzdMgGsxsYfEv6OUSgOrWMYOngpKDpchMt0ISgVpeNFo2XSCrjnA8cKx9uZ+UbD/d5zYRlU69OmPAUCNNvWNWMcptARZhbM9x+aNfixuOXmQuQUCCo6ln3X9HxTEsYTb6tLk280E9k0atMdddYjZIvhc1uuu1n3iDUgLxypMNtl8S0O4KH/iZ3Z4c6SB8VmaZxI+SHay8FIS9bttbhpLMlGQO1fxn8GH8og1D5ptYQpYhjctkCIHRADlUZ5oo9ZcO415gcn8kTYXa8gMK1Jn/YCNghMU9EFOWHHisCMwa9vdh1YFmTQLJWDklV0OoUHrze0C3csxSY2BlhVWRNceTogY2vQXa8rasxsM9Lz2dy1kGrkhxxNyT4z0YfEvIfCXFVN2csD1QeeKaFwFn6V2k+pxm5PwhOfABQJ9AqJWQ502rzNxXnFDu9yeRyykShA64ZsPrqZyD7KGe3zfj9qGawK+WJJR'\nRTF_HTTP_PROXY=''\nRTF_NO_PROXY=''\nRTF_MONITORING_PROXY=''\nRTF_SERVICE_UID=''\nRTF_SERVICE_GID=''\nRTF_AGENT_URL=''\nPOD_NETWORK_CIDR='10.244.0.0/16'\nSERVICE_CIDR='10.100.0.0/16'\nEOF\n",
+            "template": "#!/bin/bash\n\nmkdir -p /opt/anypoint/runtimefabric\ncat \u003e\u003e /opt/anypoint/runtimefabric/env \u003c\u003cEOF\nRTF_NODE_ROLE=controller_node\nRTF_INSTALL_ROLE=leader\nRTF_INSTALL_PACKAGE_URL=\"${installer_url}\"\nRTF_ETCD_DEVICE_SIZE=60G\nRTF_DOCKER_DEVICE_SIZE=250G\nRTF_TOKEN=\"${cluster_token}\"\nRTF_NAME=\"${cluster_name}\"\nRTF_ACTIVATION_DATA=\"${activation_data}\"\nRTF_ORG_ID=\"${org_id}\"\nRTF_REGION=\"${region}\"\nRTF_ENDPOINT=\"${endpoint}\"\nRTF_AUTH_TOKEN=\"${auth_token}\"\nRTF_MULE_LICENSE='${mule_license}'\nRTF_HTTP_PROXY='${http_proxy}'\nRTF_NO_PROXY='${no_proxy}'\nRTF_MONITORING_PROXY='${monitoring_proxy}'\nRTF_SERVICE_UID='${service_uid}'\nRTF_SERVICE_GID='${service_gid}'\nRTF_AGENT_URL='${agent_url}'\nPOD_NETWORK_CIDR='${pod_network_cidr_block}'\nSERVICE_CIDR='${service_cidr_block}'\nEOF\n",
+            "vars": {
+              "activation_data": "YW55cG9pbnQubXVsZXNvZnQuY29tOjdmZDk0OGE5LWMwNGEtNDJiYi1iMTFhLTAyZTNkOWJmMDc0Mw==",
+              "agent_url": "",
+              "auth_token": "",
+              "cluster_name": "runtime-fabric",
+              "cluster_token": "sOH0xEcUA1x7tpbZ",
+              "endpoint": "https://anypoint.mulesoft.com",
+              "http_proxy": "",
+              "installer_url": "",
+              "monitoring_proxy": "",
+              "mule_license": "2+W35iUhD9n6UzfSh144qHKlIsjMqSBw/YescXleQkGpfhLfKc4CGYnihgQo/6fKMpYrSCvCybcFkM7GspNi+aVJDAvpGyyfkpeNWx7x0ygE3eFPipCTZ/r/dTOTC8IrpGwcc6bHn1eneO9PMPQrLkqxS6GAbumpGMgoJe23ttaRz94FvcKxkq5IjGQiqnY/U7cKnnwFtK0A+7XiU5J5ROYrBIZPW6QEa31RPdummqQib3eAKn+mBubzLeTsIYcP28ne4T37A1OILlyGtDCML/Jfe/nMfncRzZx6lnuJvz5jlBqaRKSKa3Y6/aySAmOYa1KHWVbVeys8lOi5qbJS3qAzTzP40coX9XBwGo3iHx25NLqtL9b50/4vAOkAfbwSJegaKNJIrhz1dRomVEXBpForc+K9obSIt9FU8uH2HDlNfcytk/GeU2dglfcldrFCYnBYoWHvGcTAHMBxpt8XAu6UWKJs6NVTxHd98ZGDs4W0LHHqHDJUqn+sNMKKSdeTzwEzdMgGsxsYfEv6OUSgOrWMYOngpKDpchMt0ISgVpeNFo2XSCrjnA8cKx9uZ+UbD/d5zYRlU69OmPAUCNNvWNWMcptARZhbM9x+aNfixuOXmQuQUCCo6ln3X9HxTEsYTb6tLk280E9k0atMdddYjZIvhc1uuu1n3iDUgLxypMNtl8S0O4KH/iZ3Z4c6SB8VmaZxI+SHay8FIS9bttbhpLMlGQO1fxn8GH8og1D5ptYQpYhjctkCIHRADlUZ5oo9ZcO415gcn8kTYXa8gMK1Jn/YCNghMU9EFOWHHisCMwa9vdh1YFmTQLJWDklV0OoUHrze0C3csxSY2BlhVWRNceTogY2vQXa8rasxsM9Lz2dy1kGrkhxxNyT4z0YfEvIfCXFVN2csD1QeeKaFwFn6V2k+pxm5PwhOfABQJ9AqJWQ502rzNxXnFDu9yeRyykShA64ZsPrqZyD7KGe3zfj9qGawK+WJJR",
+              "no_proxy": "",
+              "org_id": "",
+              "pod_network_cidr_block": "10.244.0.0/16",
+              "region": "us-east-1",
+              "service_cidr_block": "10.100.0.0/16",
+              "service_gid": "",
+              "service_uid": ""
+            }
+          }
+        }
+      ]
+    },
+    {
+      "mode": "data",
+      "type": "template_file",
+      "name": "worker_env",
+      "provider": "provider.template",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_eip",
+      "name": "controller_ip",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_eip",
+      "name": "installer_ip",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_eip",
+      "name": "nat",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "controller_node",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "inbound_traffic_controller",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "installer_node",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_instance",
+      "name": "worker_node",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_internet_gateway",
+      "name": "gw",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lb",
+      "name": "load_balancer",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lb_listener",
+      "name": "load_balancer",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lb_target_group",
+      "name": "load_balancer",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lb_target_group_attachment",
+      "name": "controller",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_lb_target_group_attachment",
+      "name": "installer",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_main_route_table_association",
+      "name": "a",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_nat_gateway",
+      "name": "ngw",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_route_table",
+      "name": "rt",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_route_table_association",
+      "name": "rta",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group",
+      "name": "cluster",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "arn": "arn:aws:ec2:ap-southeast-2:093495543323:security-group/sg-01857f5845b20dbed",
+            "description": "Managed by Terraform",
+            "egress": [],
+            "id": "sg-01857f5845b20dbed",
+            "ingress": [],
+            "name": "runtime-fabric",
+            "name_prefix": null,
+            "owner_id": "093495543323",
+            "revoke_rules_on_delete": false,
+            "tags": {
+              "Name": "runtime-fabric-cluster",
+              "ROLE": "RuntimeFabric-terraform"
+            },
+            "timeouts": null,
+            "vpc_id": "vpc-0044ab40cf21a7a9c"
+          },
+          "private": "eyJlMmJmYjczMC1lY2FhLTExZTYtOGY4OC0zNDM2M2JjN2M0YzAiOnsiY3JlYXRlIjo2MDAwMDAwMDAwMDAsImRlbGV0ZSI6NjAwMDAwMDAwMDAwfSwic2NoZW1hX3ZlcnNpb24iOiIxIn0=",
+          "dependencies": [
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "bandwidth",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Bandwidth checker utility",
+            "from_port": 4242,
+            "id": "sgrule-235706949",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 4242,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "cluster_egress_traffic",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "In-cluster Outbound",
+            "from_port": 0,
+            "id": "sgrule-3297558448",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "-1",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 0,
+            "type": "egress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "cluster_status",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Cluster status gRPC API",
+            "from_port": 7575,
+            "id": "sgrule-1889704778",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 7575,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "dns_tcp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Internal cluster DNS",
+            "from_port": 53,
+            "id": "sgrule-456653407",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 53,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "dns_udp",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Internal cluster DNS",
+            "from_port": 53,
+            "id": "sgrule-3211286960",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "udp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 53,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "docker_registry",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Internal Docker registry",
+            "from_port": 5000,
+            "id": "sgrule-1493335633",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 5000,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "egress_traffic",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "Outbound",
+            "from_port": 0,
+            "id": "sgrule-940836782",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "-1",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 0,
+            "type": "egress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "etcd_2379",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Etcd server communications",
+            "from_port": 2379,
+            "id": "sgrule-4048538576",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 2380,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "etcd_4001",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Etcd server communications",
+            "from_port": 4001,
+            "id": "sgrule-1086589358",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 4001,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "etcd_7001",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Etcd server communications",
+            "from_port": 7001,
+            "id": "sgrule-3978780147",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 7001,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "http_proxy_egress_traffic",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ingress_https",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "HTTPS ingress",
+            "from_port": 443,
+            "id": "sgrule-1538093263",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 443,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "installer_61008",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Installer agent ports",
+            "from_port": 61008,
+            "id": "sgrule-4003590828",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 61010,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "installer_61022",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Installer agent ports",
+            "from_port": 61022,
+            "id": "sgrule-2452505479",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 61024,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "internal_telekube",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Internal Telekube services",
+            "from_port": 3008,
+            "id": "sgrule-2242770130",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 3012,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "internal_teleport",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Teleport internal SSH control panel",
+            "from_port": 3022,
+            "id": "sgrule-1012423753",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 3025,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "k8s_components",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Kubernetes components",
+            "from_port": 10248,
+            "id": "sgrule-1624498421",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 10250,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "k8s_components_2",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Kubernetes components",
+            "from_port": 10255,
+            "id": "sgrule-3409392430",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 10255,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "kubernetes_api",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Kubernetes API server",
+            "from_port": 6443,
+            "id": "sgrule-1759545714",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 6443,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "kubernetes_api_external",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "monitoring_proxy_egress_traffic",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ntp_egress_traffic",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "NTP Outbound",
+            "from_port": 123,
+            "id": "sgrule-3628687354",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "udp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 123,
+            "type": "egress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ops_center",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "OpsCenter UI",
+            "from_port": 32009,
+            "id": "sgrule-3803399310",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 32009,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ops_center_external",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "overlay",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Overlay network",
+            "from_port": 8472,
+            "id": "sgrule-3235833499",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "udp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 8472,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "rtf_agent",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "RTF Agent API",
+            "from_port": 30945,
+            "id": "sgrule-2021568549",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 30945,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "serf_7373",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Serf (Health check agents) peer to peer",
+            "from_port": 7373,
+            "id": "sgrule-1984509222",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 7373,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "serf_7496",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": null,
+            "description": "Serf (Health check agents) peer to peer",
+            "from_port": 7496,
+            "id": "sgrule-739814880",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": true,
+            "source_security_group_id": null,
+            "to_port": 7496,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_security_group_rule",
+      "name": "ssh",
+      "provider": "provider.aws",
+      "instances": [
+        {
+          "schema_version": 2,
+          "attributes": {
+            "cidr_blocks": [
+              "0.0.0.0/0"
+            ],
+            "description": "SSH access",
+            "from_port": 22,
+            "id": "sgrule-1044341108",
+            "ipv6_cidr_blocks": null,
+            "prefix_list_ids": null,
+            "protocol": "tcp",
+            "security_group_id": "sg-01857f5845b20dbed",
+            "self": false,
+            "source_security_group_id": null,
+            "to_port": 22,
+            "type": "ingress"
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjIifQ==",
+          "dependencies": [
+            "aws_security_group.cluster",
+            "aws_vpc.vpc"
+          ]
+        }
+      ]
+    },
+    {
+      "mode": "managed",
+      "type": "aws_subnet",
+      "name": "public",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "aws_vpc",
+      "name": "vpc",
+      "each": "list",
+      "provider": "provider.aws",
+      "instances": []
+    },
+    {
+      "mode": "managed",
+      "type": "random_string",
+      "name": "cluster_token",
+      "provider": "provider.random",
+      "instances": [
+        {
+          "schema_version": 1,
+          "attributes": {
+            "id": "sOH0xEcUA1x7tpbZ",
+            "keepers": null,
+            "length": 16,
+            "lower": true,
+            "min_lower": 0,
+            "min_numeric": 0,
+            "min_special": 0,
+            "min_upper": 0,
+            "number": true,
+            "override_special": null,
+            "result": "sOH0xEcUA1x7tpbZ",
+            "special": false,
+            "upper": true
+          },
+          "private": "eyJzY2hlbWFfdmVyc2lvbiI6IjEifQ=="
+        }
+      ]
+    }
+  ]
+}
